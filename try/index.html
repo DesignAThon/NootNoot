@@ -27,10 +27,10 @@
             import { RGBELoader } from "three/addons/loaders/RGBELoader.js";
             import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
 
-            var scene, camera, renderer;
+            var scene, camera, renderer, loader;
             var winterscape;
-            var penguin, background, sleigh, log;
-            let counter = 0;
+            var penguin, background, sleigh, logs = [];
+            let count = 0;
 
             scene = new THREE.Scene();
             scene.background = new THREE.Color("green");
@@ -46,7 +46,7 @@
 				camera.position.set(0, 0, 1);
 
                 //Load background texture
-                const loader = new THREE.TextureLoader();
+                loader = new THREE.TextureLoader();
                 loader.load("../images/winterbackground.jpg", function (texture) {
                     scene.background = texture;
                 });
@@ -63,13 +63,8 @@
                         const dracoLoader = new DRACOLoader();
                         dracoLoader.setDecoderPath("../otherSamples/jsm/libs/draco/");
 
-                        const loader = new GLTFLoader().setPath("../models/");
+                        loader = new GLTFLoader().setPath("../models/");
                         loader.setDRACOLoader(dracoLoader);
-
-                        // // then you can load your glb file
-                        // loader.load("log6.gltf", function (gltf) {
-                        //     scene.add(gltf.scene);
-                        // });
 
                         // then you can load your glb file
                         loader.load("winterscape.glb", function (gltf) {
@@ -145,6 +140,7 @@
                         penguin.lookAt(0, 0, -Math.PI);
                         sleigh.lookAt(0, 0, Math.PI);
                         sleigh.position.x = penguin.position.x + 0.1; //move sleigh with penguin
+                        if (logs.length > 0) logs.forEach(log => log.position.x = sleigh.position.x);
                         render();
                         break;
                     case "d": //forward
@@ -153,11 +149,32 @@
                         penguin.lookAt(0, 0, Math.PI);
                         sleigh.lookAt(0, 0, -Math.PI);
                         sleigh.position.x = penguin.position.x - 0.1; //move sleigh with penguin
+                        if (logs.length > 0) logs.forEach(log => log.position.x = sleigh.position.x);
+                        render();
+                        break;
+                    case " ":
+                        if (penguin.position.x >= 0.39) {
+                            document.getElementById("whack").play();
+                            loader.load("log6.gltf", function (gltf) {
+                                logs[count] = gltf.scene;
+                                logs[count].scale.set(0.1, 0.1, 0.1);
+                                logs[count].position.set(sleigh.position);
+                                //logs[count].lookAt(-Math.PI/2, 0,0);
+                                logs[count].position.y = sleigh.position.y + 0.02*count;
+                                logs[count].position.x = sleigh.position.x - 0.02;
+                                scene.add(logs[count]);
+                                render();
+                                count ++;
+                            }, undefined, function (error) {
+                                console.error(error);
+                            });
+                        }
                         render();
                         break;
                     default:
                         break;
                 }
+                render();
             });
         </script>
         <div class="snowflake">❄</div>
@@ -170,6 +187,6 @@
         <div class="snowflake">❄</div>
         <div class="snowflake">❄</div>
         <div class="snowflake">❄</div>
-        <audio src="../sounds/whacktree.mp3" preload></audio>
+        <audio id="whack" src="../sounds/whacktree.mp3" preload></audio>
     </body>
 </html>

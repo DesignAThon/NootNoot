@@ -28,7 +28,7 @@
 
             var scene, camera, renderer;
             var winterscape;
-            var penguin;
+            var penguin, background;
 
             scene = new THREE.Scene();
             scene.background = new THREE.Color("green");
@@ -39,15 +39,9 @@
                 const container = document.createElement("div");
                 document.body.appendChild(container);
 
-                camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.25, 20);
+                camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.25, 20);
                 // x, y, z: closeness to the object
-                camera.position.set(0, 0, 1.2);
-
-                const geometry = new THREE.BoxGeometry(0.1, 0.1, 0.1);
-                const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-                penguin = new THREE.Mesh(geometry, material);
-                penguin.position.set(-1, 0, 0);
-                scene.add(penguin);
+				camera.position.set(0, 0, 1);
 
                 //Load background texture
                 const loader = new THREE.TextureLoader();
@@ -72,20 +66,26 @@
 
                         // // then you can load your glb file
                         // loader.load("log6.gltf", function (gltf) {
-                        //     console.log(gltf);
                         //     scene.add(gltf.scene);
                         // });
 
                         // then you can load your glb file
-                        loader.load(
-                            "winterscape.gltf",
-                            function (gltf) {
-                                console.log(gltf);
+                        loader.load("winterscape.glb", function (gltf) {
+                                scene.add(gltf.scene);
+                                background = gltf.scene;
+                                background.position.set(0, 0, 0);
+                            }, undefined, function (error) {
+                                console.error(error);
+                            }
+                        );
+
+                        loader.load("penguin2.glb", function (gltf) {
+                                penguin = gltf.scene;
+                                penguin.scale.set(0.15, 0.15, 0.15);
+                                penguin.position.set(-0.5, 0, 0);
                                 scene.add(gltf.scene);
                                 camera.lookAt(0, 0, 0);
-                            },
-                            undefined,
-                            function (error) {
+                            }, undefined, function (error) {
                                 console.error(error);
                             }
                         );
@@ -99,8 +99,15 @@
                 renderer.outputEncoding = THREE.sRGBEncoding;
                 container.appendChild(renderer.domElement);
 
+                // allow user to control view
+                /*const controls = new OrbitControls( camera, renderer.domElement );
+				controls.addEventListener( 'change', render ); // use if there is no animation loop
+				controls.minDistance = 0.2;
+				controls.maxDistance = 10;
+				controls.target.set( 0, 0.25, 0 );
+				controls.update(); */
+
                 window.addEventListener("resize", onWindowResize);
-                console.log(scene);
             }
 
             function render() {
@@ -110,10 +117,7 @@
             function onWindowResize() {
                 camera.aspect = window.innerWidth / window.innerHeight;
                 camera.updateProjectionMatrix();
-
                 renderer.setSize(window.innerWidth, window.innerHeight);
-                console.log(scene);
-                console.log(camera);
                 render();
             }
 
@@ -124,16 +128,14 @@
                 console.log(key);
                 switch (key) {
                     case "a": //backward
-                        if (penguin.position.x - 0.15 > -1) {
-                            penguin.position.x -= 0.15;
-                            render();
-                        }
+                        if (penguin.position.x - 0.2 > -0.45) penguin.position.x -= 0.03;
+                        else penguin.position.x = -0.45;
+                        render();
                         break;
                     case "d": //forward
-                        if (penguin.position.x + 0.15 < 0.65) {
-                            penguin.position.x += 0.15;
-                            render();
-                        }
+                        if (penguin.position.x + 0.2 < 0.45) penguin.position.x += 0.03;
+                        else penguin.position.x = 0.45;
+                        render();
                         break;
                     default:
                         break;

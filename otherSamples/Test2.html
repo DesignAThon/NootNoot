@@ -35,6 +35,7 @@
 			import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 			import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 			import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+			import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 
 			let camera, scene, renderer;
 
@@ -63,15 +64,26 @@
 						render();
 
 						// model
+						const dracoLoader = new DRACOLoader();
+						dracoLoader.setDecoderPath('/otherSamples/jsm/libs/draco/');
 
 						const loader = new GLTFLoader().setPath( 'models/gltf/DamagedHelmet/glTF-instancing/' );
-						loader.load( 'straightLog.gltf', function ( gltf ) {
+						loader.setDRACOLoader(dracoLoader);
 
+						// then you can load your glb file
+						const glbPath = 'log6.gltf'
+						loader.load(glbPath, function(gltf) {
+							console.log(gltf)
 							scene.add( gltf.scene );
+						})
 
-							render();
+						// loader.load( 'straightLog.gltf', function ( gltf ) {
 
-						} );
+						// 	scene.add( gltf.scene );
+
+						// 	render();
+
+						// } );
 
 					} );
 

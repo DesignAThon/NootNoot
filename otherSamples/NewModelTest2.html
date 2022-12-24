@@ -74,7 +74,9 @@
 						const glbPath = 'Penguin.gltf'
 						loader.load(glbPath, function(gltf) {
 							console.log(gltf)
-							scene.add( gltf.scene );
+							const penguin = gltf.scene;
+							penguin.scale.set(0.1, 0.1, 0.1);
+							scene.add( penguin );
 						})
 
 						// loader.load( 'straightLog.gltf', function ( gltf ) {

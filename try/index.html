@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8" />
-        <title>My first three.js app</title>
+        <title>Collecting firewood</title>
         <style>
             body {
                 margin: 0;
@@ -31,9 +31,10 @@
             var winterscape;
             var penguin, background, sleigh, logs = [];
             let count = 0;
+            let initGame = false;
 
             scene = new THREE.Scene();
-            scene.background = new THREE.Color("green");
+            scene.background = new THREE.Color("black");
             const light = new THREE.AmbientLight(0x404040); // soft white light
             scene.add(light);
 
@@ -107,14 +108,6 @@
                 renderer.outputEncoding = THREE.sRGBEncoding;
                 container.appendChild(renderer.domElement);
 
-                // allow user to control view
-                /*const controls = new OrbitControls( camera, renderer.domElement );
-				controls.addEventListener( 'change', render ); // use if there is no animation loop
-				controls.minDistance = 0.2;
-				controls.maxDistance = 10;
-				controls.target.set( 0, 0.25, 0 );
-				controls.update(); */
-
                 window.addEventListener("resize", onWindowResize);
             }
 
@@ -133,6 +126,12 @@
             render();
             document.addEventListener("keydown", function (event) {
                 const key = event.key.toLowerCase(); // "a", "1", "Shift", etc.
+
+                if (!initGame) {
+                    initGame = true;
+                    document.getElementById("start").style.display = "none";
+                }
+
                 switch (key) {
                     case "a": //backward
                         if (penguin.position.x - 0.2 > -0.45) penguin.position.x -= 0.03;
@@ -140,7 +139,7 @@
                         penguin.lookAt(0, 0, -Math.PI);
                         sleigh.lookAt(0, 0, Math.PI);
                         sleigh.position.x = penguin.position.x + 0.1; //move sleigh with penguin
-                        if (logs.length > 0) logs.forEach(log => log.position.x = sleigh.position.x);
+                        if (logs.length > 0) logs.forEach(log => log.position.x = sleigh.position.x - 0.015);
                         render();
                         break;
                     case "d": //forward
@@ -149,7 +148,7 @@
                         penguin.lookAt(0, 0, Math.PI);
                         sleigh.lookAt(0, 0, -Math.PI);
                         sleigh.position.x = penguin.position.x - 0.1; //move sleigh with penguin
-                        if (logs.length > 0) logs.forEach(log => log.position.x = sleigh.position.x);
+                        if (logs.length > 0) logs.forEach(log => log.position.x = sleigh.position.x + 0.015);
                         render();
                         break;
                     case " ":
@@ -161,7 +160,8 @@
                                 logs[count].position.set(sleigh.position);
                                 //logs[count].lookAt(-Math.PI/2, 0,0);
                                 logs[count].position.y = sleigh.position.y + 0.02*count;
-                                logs[count].position.x = sleigh.position.x - 0.02;
+                                logs[count].position.z = sleigh.position.z - 0.05;
+                                logs[count].position.x = sleigh.position.x + 0.015;
                                 scene.add(logs[count]);
                                 render();
                                 count ++;
@@ -187,6 +187,11 @@
         <div class="snowflake">❄</div>
         <div class="snowflake">❄</div>
         <div class="snowflake">❄</div>
+        <div class="center" id="start">
+            <h1>Collect Firewood</h1>
+            <p>Penguin has to collect firewood before going home. Use "a" and "d" keys to run towards the trees. Then press spacebar to cut wood. </p>
+            <p>Press any key to start.</p>
+        </div>
         <audio id="whack" src="../sounds/whacktree.mp3" preload></audio>
     </body>
 </html>

@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>three.js webgl - GLTFloader + Instancing</title>
+    <title>Penguin Fishing Scene</title>
     <meta charset="utf-8" />
     <meta
       name="viewport"
       content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
     />
     <link type="text/css" rel="stylesheet" href="FishingScene.css" />
-    
   </head>
 
   <body>
-    <div id="info">Click to Begin</div>
+    <div id="info">
+      <p>Click to Begin</p>
+      <p>Use mouse to move camera</p>
+      <p>Use WASD to move fishing rod, and space to cast or reel in</p>
+    </div>
 
     <!-- Import maps polyfill -->
     <!-- Remove this when import maps will be widely supported -->
@@ -34,12 +37,27 @@
       import * as THREE from "three";
 
       import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+
       import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
       import { RGBELoader } from "three/addons/loaders/RGBELoader.js";
       import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
 
+      // Scene
       let camera, scene, renderer;
-      var fish, penguin, island, rod, bobber;
+
+      // Models
+      var fish, penguin, island, rod, bobber, alertModel;
+
+      // Timing
+      let startTime, prevTime, elapsedTime;
+      let animationDone = false;
+      let animationPhase = 0;
+      let currentAnimation = "idle";
+      var currentRodRotation = 0;
+
+      // Game state
+      var numFish = 0;
+      const targetFish = 5;
 
       init();
       render();
@@ -59,6 +77,7 @@
         camera.lookAt(0, 0, 0);
 
         scene = new THREE.Scene();
+        const clock = new THREE.Clock();
 
         // Load the background
         new RGBELoader()
@@ -87,7 +106,7 @@
             const cube3 = new THREE.Mesh(geometry3, material3);
             cube3.position.set(0, 0, 0.2);
             scene.add(cube3);
-            
+
             // // Calibrate tip of rod TODO: make this a child of the rod
             // const geometry4 = new THREE.BoxGeometry(0.005, 0.005, 0.05);
             // const material4 = new THREE.MeshBasicMaterial({ color: 0xffff00 });
@@ -168,8 +187,25 @@
 
               scene.add(bobber);
             });
+
+            // Alert (exclamation mark) model
+            const glbPath5 = "Alert.gltf";
+            loader.load(glbPath5, function (gltf) {
+              console.log(gltf);
+              alertModel = gltf.scene;
+
+              // Alert default position
+              alertModel.scale.set(0.1, 0.1, 0.1);
+              alertModel.position.set(0.35, 0, 0.1);
+              alertModel.rotation.set(0, 90, 0);
+
+              // hide alert model
+              alertModel.visible = false;
+
+              scene.add(alertModel);
+            });
           });
-        
+
         // renderer
         renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setPixelRatio(window.devicePixelRatio);
@@ -188,13 +224,12 @@
         controls.update();
 
         window.addEventListener("resize", onWindowResize);
-        
+
         // // wait for the models to load then start the animation
         // setTimeout(() => {
         //     // replace with game loop later
         //     window.requestAnimationFrame(step);
         // }, 3000);
-
       }
 
       function onWindowResize() {
@@ -210,8 +245,113 @@
         renderer.render(scene, camera);
       }
 
-      // Game mechanics
+      // Game mechanics ---------------------------------------------------------------
+      // Get user input from keyboard
+      document.addEventListener("keydown", (event) => {
+        const keyName = event.key;
 
+        if (keyName === "ArrowUp" || keyName === "w") {
+          // move rod up (up to 0 rad)
+          rod.rotation.z += 0.05;
+
+          if (rod.rotation.z > 0) {
+            rod.rotation.z = 0;
+          }
+          console.log(rod.rotation.z);
+        } else if (keyName === "ArrowDown" || keyName === "s") {
+          // move rod down (up to -0.8 rad)
+          rod.rotation.z -= 0.05;
+
+          if (rod.rotation.z < -0.8) {
+            rod.rotation.z = -0.8;
+          }
+          console.log(rod.rotation.z);
+        } else if (keyName === "ArrowRight" || keyName === "d") {
+          // move rod left (up to -5.8 rad)
+          rod.rotation.y += 0.1;
+
+          if (rod.rotation.y > -6) {
+            rod.rotation.y = -6;
+          }
+          console.log(rod.rotation.y);
+        } else if (keyName === "ArrowLeft" || keyName === "a") {
+          // move rod right (up to -6.5 rad)
+          rod.rotation.y -= 0.1;
+
+          if (rod.rotation.y < -6.5) {
+            rod.rotation.y = -6.5;
+          }
+          console.log(rod.rotation.y);
+        } else if (keyName === " ") {
+          if (!(currentAnimation === "cast")) {
+            resetAnimationParams();
+            window.requestAnimationFrame(castAnimation);
+          }
+          
+        }
+
+        // update rod position
+        render();
+      });
+
+      function resetAnimationParams() {
+        startTime = undefined;
+        animationPhase = 0;
+        animationDone = false;
+      }
+
+      function castAnimation(timestamp) {
+        if (startTime === undefined) {
+          startTime = timestamp;
+          currentRodRotation = rod.rotation.z;
+          currentAnimation = "cast"
+        }
+
+        const elapsed = timestamp - startTime;
+        if (prevTime !== timestamp) {
+          switch (animationPhase) {
+            case 0:
+              // flick rod up
+              rod.rotation.z += 0.1;
+
+              if (rod.rotation.z >= currentRodRotation + 0.5) {
+                rod.rotation.z = currentRodRotation + 0.5;
+              }
+
+              if (rod.rotation.z === currentRodRotation + 0.5) {
+                animationPhase = 1;
+              }
+              break;
+            case 1:
+                // flick rod down
+                rod.rotation.z -= 0.1;
+
+                if (rod.rotation.z <= currentRodRotation) {
+                  rod.rotation.z = currentRodRotation
+                }
+
+                if (rod.rotation.z === currentRodRotation) {
+                  animationPhase = 2;
+                }
+
+              break;
+            case 2:
+              animationDone = true;
+              currentAnimation = "idle"
+          }
+          console.log(rod.rotation.z)
+
+          render();
+        }
+
+        prevTime = timestamp;
+        if (!animationDone) {
+          // add some delay
+          setTimeout(() => {
+            window.requestAnimationFrame(castAnimation);
+          }, 50);
+        }
+      }
     </script>
   </body>
 </html>

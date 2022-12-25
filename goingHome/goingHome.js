@@ -25,8 +25,8 @@ function init() {
     scene.background = textureLoader.load("../images/winterbackground.jpg");
 
     new RGBELoader()
-        .setPath("../otherSamples/textures/equirectangular/")
-        .load("royal_esplanade_1k.hdr", function (texture) {
+        .setPath("../textures/equirectangular/")
+        .load("snowy_forest_path_01_2k.hdr", function (texture) {
             texture.mapping = THREE.EquirectangularReflectionMapping;
 
             //scene.background = texture;
@@ -34,7 +34,7 @@ function init() {
 
             // model
             const dracoLoader = new DRACOLoader();
-            dracoLoader.setDecoderPath("../otherSamples/jsm/libs/draco/");
+            dracoLoader.setDecoderPath("../jsm/libs/draco/");
 
             loader = new GLTFLoader().setPath("../models/");
             loader.setDRACOLoader(dracoLoader);

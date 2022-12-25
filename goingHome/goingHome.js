@@ -4,7 +4,7 @@ import { RGBELoader } from "three/addons/loaders/RGBELoader.js";
 import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
 
 var scene, camera, renderer, loader, textureLoader;
-var penguin, background, sleigh, logs = [], count = 2;
+var penguin, friend, hat, background, sleigh, logs = [], count = 2;
 let initGame = false, isAtHome = false;
 
 scene = new THREE.Scene();
@@ -82,7 +82,6 @@ function init() {
                     render();
                 });
             }
-
         });
 
     renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -130,8 +129,8 @@ document.addEventListener("keydown", function (event) {
                 scene.background = textureLoader.load("../images/icewall.jpg");
                 background.removeFromParent();
                 sleigh.removeFromParent();
-                penguin.lookAt(-Math.PI/2,0,0);
-                penguin.position.set(0.00,0,0)
+                //penguin.lookAt(-Math.PI/2,0,0);
+                penguin.position.set(-0.3, -0.3,0)
                 penguin.scale.set(0.1, 0.1, 0.1);
                 logs.forEach(log => log.removeFromParent());
             }
@@ -140,6 +139,23 @@ document.addEventListener("keydown", function (event) {
 
     if(isAtHome) {
         render();
+        document.getElementById("caption").style.display = "block";
+        loader.load("friend.glb", function (gltf) {
+            friend = gltf.scene;
+            friend.scale.set(0.10, 0.10, 0.10);
+            friend.position.set(0.3, -0.3, 0);
+            scene.add(friend);
+            friend.lookAt(0, 0, -Math.PI);
+
+            loader.load("fire.glb", function (gltf) {
+                let fire = gltf.scene;
+                fire.scale.set(0.65, 0.65, 0.65);
+                fire.position.set(0.05, -0.2, 0);
+                scene.add(fire);
+            })
+        }, undefined, function (error) {
+            console.error(error);
+        });
     }
 
     render();

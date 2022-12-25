@@ -6,3 +6,12 @@ body {
     font-size: 26px;
     color: white;
 }
+
+#caption {
+    display: none;
+    position: absolute;
+    z-index: 4;
+    text-align: center;
+    width: 100vw;
+    background-color: rgba(0,0,0,0.5);
+}

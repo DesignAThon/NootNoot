@@ -12,7 +12,7 @@
 
   <body>
     <div id="info">
-      <p>Click to Begin</p>
+      <p id="fishCaught">Click to Begin</p>
       <p>Use mouse to move camera</p>
       <p>Use WASD to move fishing rod, and space to cast or reel in</p>
     </div>
@@ -56,8 +56,17 @@
       var currentRodRotation = 0;
 
       // Game state
-      var numFish = 0;
+      var numFishCaught = 0;
       const targetFish = 5;
+      var bobberAboveFish = false;
+      var gameState = "idle";
+      var fishPositions = [
+        { x: 0.42, z: 0.1 },
+        { x: 0.26, z: 0.0 },
+        { x: 0.35, z: 0.2 },
+        { x: 0.2, z: 0.1 },
+        { x: 0.4, z: 0.2 },
+      ];
 
       init();
       render();
@@ -88,24 +97,24 @@
             scene.background = texture;
             scene.environment = texture;
 
-            // load in red, green and blue cubes for orientation -----------------------------
-            const geometry = new THREE.BoxGeometry(0.1, 0.1, 0.1);
-            const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 }); // green
-            const cube1 = new THREE.Mesh(geometry, material);
-            cube1.position.set(0, 0.2, 0);
-            scene.add(cube1);
+            // // load in red, green and blue cubes for orientation -----------------------------
+            // const geometry = new THREE.BoxGeometry(0.1, 0.1, 0.1);
+            // const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 }); // green
+            // const cube1 = new THREE.Mesh(geometry, material);
+            // cube1.position.set(0, 0.2, 0);
+            // scene.add(cube1);
 
-            const geometry2 = new THREE.BoxGeometry(0.1, 0.1, 0.1);
-            const material2 = new THREE.MeshBasicMaterial({ color: 0xff0000 }); // red
-            const cube2 = new THREE.Mesh(geometry2, material2);
-            cube2.position.set(0.2, 0, 0);
-            scene.add(cube2);
+            // const geometry2 = new THREE.BoxGeometry(0.1, 0.1, 0.1);
+            // const material2 = new THREE.MeshBasicMaterial({ color: 0xff0000 }); // red
+            // const cube2 = new THREE.Mesh(geometry2, material2);
+            // cube2.position.set(0.2, 0, 0);
+            // scene.add(cube2);
 
-            const geometry3 = new THREE.BoxGeometry(0.1, 0.1, 0.1);
-            const material3 = new THREE.MeshBasicMaterial({ color: 0x0000ff }); // blue
-            const cube3 = new THREE.Mesh(geometry3, material3);
-            cube3.position.set(0, 0, 0.2);
-            scene.add(cube3);
+            // const geometry3 = new THREE.BoxGeometry(0.1, 0.1, 0.1);
+            // const material3 = new THREE.MeshBasicMaterial({ color: 0x0000ff }); // blue
+            // const cube3 = new THREE.Mesh(geometry3, material3);
+            // cube3.position.set(0, 0, 0.2);
+            // scene.add(cube3);
 
             // // Calibrate tip of rod TODO: make this a child of the rod
             // const geometry4 = new THREE.BoxGeometry(0.005, 0.005, 0.05);
@@ -127,7 +136,6 @@
             // FishingIsland model
             const glbPathIsland = "FishingIsland.gltf";
             loader.load(glbPathIsland, function (gltf) {
-              console.log(gltf);
               island = gltf.scene;
               island.scale.set(0.1, 0.1, 0.1);
               island.position.set(0.35, -0.1, 0.3);
@@ -149,13 +157,13 @@
             // Fish model
             const glbPath2 = "Fish.gltf";
             loader.load(glbPath2, function (gltf) {
-              console.log(gltf);
               fish = gltf.scene;
 
               // Fish default position
               fish.scale.set(0.03, 0.03, 0.03);
-              fish.position.set(0.4, -0.2, 0.1);
+              fish.position.set(fishPositions[0].x, -0.2, fishPositions[0].z);
               fish.rotation.set(0, 0, -((45 / 180) * Math.PI));
+              fish.visible = false;
 
               scene.add(fish);
             });
@@ -163,7 +171,6 @@
             // Fishing rod model
             const glbPath3 = "FishingRod.gltf";
             loader.load(glbPath3, function (gltf) {
-              console.log(gltf);
               rod = gltf.scene;
 
               // Rod default position
@@ -177,7 +184,6 @@
             // Bobber model
             const glbPath4 = "Bobber.gltf";
             loader.load(glbPath4, function (gltf) {
-              console.log(gltf);
               bobber = gltf.scene;
 
               // Bobber default position
@@ -191,12 +197,11 @@
             // Alert (exclamation mark) model
             const glbPath5 = "Alert.gltf";
             loader.load(glbPath5, function (gltf) {
-              console.log(gltf);
               alertModel = gltf.scene;
 
               // Alert default position
               alertModel.scale.set(0.1, 0.1, 0.1);
-              alertModel.position.set(0.35, 0, 0.1);
+              alertModel.position.set(0.35, -0.05, 0.1);
               alertModel.rotation.set(0, 90, 0);
 
               // hide alert model
@@ -258,8 +263,6 @@
             rod.rotation.z = 0;
           }
 
-          console.log(rod.rotation.z);
-
           // move bobber position (up to 0.24)
           bobber.position.x -= 0.01;
 
@@ -267,6 +270,7 @@
             bobber.position.x = 0.24;
           }
 
+          console.log(bobber.position.x);
         } else if (keyName === "ArrowDown" || keyName === "s") {
           // move rod down (up to -0.8 rad)
           rod.rotation.z -= 0.05;
@@ -282,6 +286,7 @@
             bobber.position.x = 0.48;
           }
 
+          console.log(bobber.position.x);
         } else if (keyName === "ArrowRight" || keyName === "d") {
           // move rod left (up to 0.4 rad)
           rod.rotation.y += 0.1;
@@ -297,6 +302,7 @@
             bobber.position.z = -0.04;
           }
 
+          console.log(bobber.position.z);
         } else if (keyName === "ArrowLeft" || keyName === "a") {
           // move rod right (up to -0.4 rad)
           rod.rotation.y -= 0.1;
@@ -312,18 +318,19 @@
           if (bobber.position.z > 0.2) {
             bobber.position.z = 0.2;
           }
-          
 
+          console.log(bobber.position.z);
         } else if (keyName === " ") {
           if (!(currentAnimation === "cast")) {
             resetAnimationParams();
             window.requestAnimationFrame(castAnimation);
           }
-          
         }
 
         // update rod position
         render();
+
+        updateGameState();
       });
 
       function resetAnimationParams() {
@@ -336,7 +343,7 @@
         if (startTime === undefined) {
           startTime = timestamp;
           currentRodRotation = rod.rotation.z;
-          currentAnimation = "cast"
+          currentAnimation = "cast";
         }
 
         const elapsed = timestamp - startTime;
@@ -355,23 +362,25 @@
               }
               break;
             case 1:
-                // flick rod down
-                rod.rotation.z -= 0.1;
+              // flick rod down
+              rod.rotation.z -= 0.1;
 
-                if (rod.rotation.z <= currentRodRotation) {
-                  rod.rotation.z = currentRodRotation
-                }
+              if (rod.rotation.z <= currentRodRotation) {
+                rod.rotation.z = currentRodRotation;
+              }
 
-                if (rod.rotation.z === currentRodRotation) {
-                  animationPhase = 2;
-                }
+              if (rod.rotation.z === currentRodRotation) {
+                animationPhase = 2;
+              }
 
               break;
             case 2:
               animationDone = true;
-              currentAnimation = "idle"
+              updateGameState();
+              currentAnimation = "idle";
+              break;
           }
-          console.log(rod.rotation.z)
+          console.log(rod.rotation.z);
 
           render();
         }
@@ -383,6 +392,79 @@
             window.requestAnimationFrame(castAnimation);
           }, 50);
         }
+      }
+
+      function updateGameState() {
+        // Check if the bobber is near the fish
+        bobberAboveFish = checkIfBobberAboveFish();
+        if (bobberAboveFish) {
+          // move the alert model above the bobber x and z position
+          alertModel.position.x = bobber.position.x;
+          alertModel.position.z = bobber.position.z;
+          // show alert model
+          alertModel.visible = true;
+          render();
+        } else {
+          // hide alert model
+          alertModel.visible = false;
+          render();
+        }
+
+        if (bobberAboveFish && currentAnimation === "cast") {
+          // move the fish to the bobber x and z position
+          fish.position.x = bobber.position.x;
+          fish.position.z = bobber.position.z;
+          // show fish model
+          fish.visible = true;
+          render();
+
+          numFishCaught += 1;
+          if (numFishCaught < targetFish) {
+            document.getElementById("fishCaught").innerHTML =
+              "Number of fish caught: " +
+              numFishCaught +
+              " / " +
+              targetFish +
+              "";
+            setTimeout(() => {
+              // move fish to next position
+              fish.position.x = fishPositions[numFishCaught].x;
+              fish.position.z = fishPositions[numFishCaught].z;
+
+              console.log(fish.position.x, fish.position.z);
+
+              // hide fish model
+              fish.visible = false;
+              alertModel.visible = false;
+              render();
+            }, 500);
+          } else {
+            document.getElementById("fishCaught").innerHTML =
+              "Number of fish caught: " + targetFish + " / " + targetFish + "";
+            gameState = "won";
+          }
+        } else {
+          // hide fish model
+          fish.visible = false;
+          render();
+        }
+      }
+
+      function checkIfBobberAboveFish() {
+        // check if the bobber is above the fish
+        let bobberAboveFish = false;
+        if (
+          bobber.position.x >= fish.position.x - 0.05 &&
+          bobber.position.x <= fish.position.x + 0.05
+        ) {
+          if (
+            bobber.position.z >= fish.position.z - 0.05 &&
+            bobber.position.z <= fish.position.z + 0.05
+          ) {
+            bobberAboveFish = true;
+          }
+        }
+        return bobberAboveFish;
       }
     </script>
   </body>

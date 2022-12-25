@@ -93,6 +93,11 @@ function init() {
     container.appendChild(renderer.domElement);
 
     window.addEventListener("resize", onWindowResize);
+    setTimeout(() => {
+        // replace with game loop later
+        //window.requestAnimationFrame(step);
+        render()
+    }, 2000);
 }
 
 function render() {

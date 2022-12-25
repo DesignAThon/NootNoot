@@ -64,11 +64,9 @@
 
             var scene, camera, renderer, loader;
             var text, penguin;
-            let count = 0;
-            let initGame = false;
 
             scene = new THREE.Scene();
-            scene.background = new THREE.Color("black");
+            const clock = new THREE.Clock();
             const light = new THREE.AmbientLight(0x404040); // soft white light
             scene.add(light);
 
@@ -116,7 +114,7 @@
                             }
                         );
                     });
-
+                // renderer
                 renderer = new THREE.WebGLRenderer({ antialias: true });
                 renderer.setPixelRatio(window.devicePixelRatio);
                 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -124,8 +122,13 @@
                 renderer.toneMappingExposure = 1;
                 renderer.outputEncoding = THREE.sRGBEncoding;
                 container.appendChild(renderer.domElement);
-
                 window.addEventListener("resize", onWindowResize);
+
+                setTimeout(() => {
+                    // replace with game loop later
+                    //window.requestAnimationFrame(step);
+                    render()
+                }, 1000);
             }
 
             function render() {
@@ -133,7 +136,7 @@
             }
 
             function onWindowResize() {
-                camera.aspect = window.innerWidth / window.innerHeight;
+                //camera.aspect = window.innerWidth / window.innerHeight;
                 camera.updateProjectionMatrix();
                 renderer.setSize(window.innerWidth, window.innerHeight);
                 render();

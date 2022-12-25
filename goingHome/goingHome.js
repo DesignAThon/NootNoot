@@ -143,15 +143,16 @@ document.addEventListener("keydown", function (event) {
         loader.load("friend.glb", function (gltf) {
             friend = gltf.scene;
             friend.scale.set(0.10, 0.10, 0.10);
-            friend.position.set(0.3, -0.3, 0);
+            friend.position.set(0.35, -0.3, 0);
             scene.add(friend);
             friend.lookAt(0, 0, -Math.PI);
 
-            loader.load("fire.glb", function (gltf) {
+            loader.load("fishcooking.glb", function (gltf) {
                 let fire = gltf.scene;
-                fire.scale.set(0.65, 0.65, 0.65);
-                fire.position.set(0.05, -0.2, 0);
+                fire.scale.set(0.35, 0.35, 0.35);
+                fire.position.set(0.05, -0.21, 0);
                 scene.add(fire);
+
             })
         }, undefined, function (error) {
             console.error(error);

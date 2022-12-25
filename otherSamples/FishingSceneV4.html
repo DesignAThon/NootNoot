@@ -182,7 +182,7 @@
 
               // Bobber default position
               bobber.scale.set(0.01, 0.01, 0.01);
-              bobber.position.set(0.35, -0.15, 0.1);
+              bobber.position.set(0.25, -0.15, 0.09);
               bobber.rotation.set(0, 0, 0);
 
               scene.add(bobber);
@@ -257,7 +257,16 @@
           if (rod.rotation.z > 0) {
             rod.rotation.z = 0;
           }
+
           console.log(rod.rotation.z);
+
+          // move bobber position (up to 0.24)
+          bobber.position.x -= 0.01;
+
+          if (bobber.position.x < 0.24) {
+            bobber.position.x = 0.24;
+          }
+
         } else if (keyName === "ArrowDown" || keyName === "s") {
           // move rod down (up to -0.8 rad)
           rod.rotation.z -= 0.05;
@@ -265,23 +274,46 @@
           if (rod.rotation.z < -0.8) {
             rod.rotation.z = -0.8;
           }
-          console.log(rod.rotation.z);
+
+          // move bobber position (up to 0.48)
+          bobber.position.x += 0.01;
+
+          if (bobber.position.x > 0.48) {
+            bobber.position.x = 0.48;
+          }
+
         } else if (keyName === "ArrowRight" || keyName === "d") {
-          // move rod left (up to -5.8 rad)
+          // move rod left (up to 0.4 rad)
           rod.rotation.y += 0.1;
 
-          if (rod.rotation.y > -6) {
-            rod.rotation.y = -6;
+          if (rod.rotation.y > 0.4) {
+            rod.rotation.y = 0.4;
           }
-          console.log(rod.rotation.y);
+
+          // move bobber position  (up to -0.04)
+          bobber.position.z -= 0.01;
+
+          if (bobber.position.z < -0.04) {
+            bobber.position.z = -0.04;
+          }
+
         } else if (keyName === "ArrowLeft" || keyName === "a") {
-          // move rod right (up to -6.5 rad)
+          // move rod right (up to -0.4 rad)
           rod.rotation.y -= 0.1;
 
-          if (rod.rotation.y < -6.5) {
-            rod.rotation.y = -6.5;
+          if (rod.rotation.y < -0.4) {
+            rod.rotation.y = -0.4;
           }
           console.log(rod.rotation.y);
+
+          // move bobber position (up to 0.2)
+          bobber.position.z += 0.01;
+
+          if (bobber.position.z > 0.2) {
+            bobber.position.z = 0.2;
+          }
+          
+
         } else if (keyName === " ") {
           if (!(currentAnimation === "cast")) {
             resetAnimationParams();

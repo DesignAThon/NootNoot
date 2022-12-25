@@ -4,10 +4,144 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Noot Noot</title>
 </head>
 <body>
-    <p>HEllo</p>
-    <button onclick="location.href = './FishingScenes/StartScene.html'">next</button>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        button {
+            background-color: #5797b1;
+            border: none;
+            border-radius: 20px;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 20px;
+            margin: 4px 2px;
+            cursor: pointer;
+            position: absolute;
+            z-index: 4;
+        }
+
+        button:hover {
+            background-color: #3e7c8f;
+            opacity: 70%;
+        }
+
+        .bottom {
+            position: absolute;
+            bottom: 0;
+            z-index: 3;
+            width: 10%;
+        }
+
+        
+        .center {
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+    <script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
+        <script type="importmap">
+            {
+                "imports": {
+                    "three": "./build/three.module.js",
+                    "three/addons/": "./jsm/"
+                }
+            }
+        </script>
+        <script type="module">
+            import * as THREE from "three";
+            import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+            import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+            import { RGBELoader } from "three/addons/loaders/RGBELoader.js";
+            import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
+
+            var scene, camera, renderer, loader;
+            var text, penguin;
+            let count = 0;
+            let initGame = false;
+
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color("black");
+            const light = new THREE.AmbientLight(0x404040); // soft white light
+            scene.add(light);
+
+            function init() {
+                const container = document.createElement("div");
+                document.body.appendChild(container);
+
+                camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.25, 20);
+                // x, y, z: closeness to the object
+				camera.position.set(0, 0, 1);
+
+                new RGBELoader()
+                    .setPath("../textures/equirectangular/")
+                    .load("snowy_forest_path_01_2k.hdr", function (texture) {
+                        texture.mapping = THREE.EquirectangularReflectionMapping;
+                        scene.background = texture;
+                        scene.environment = texture;
+
+                        // model
+                        const dracoLoader = new DRACOLoader();
+                        dracoLoader.setDecoderPath("./jsm/libs/draco/");
+
+                        loader = new GLTFLoader().setPath("./models/");
+                        loader.setDRACOLoader(dracoLoader);
+
+                        loader.load("Penguin.gltf", function (gltf) {
+                            penguin = gltf.scene;
+                            penguin.scale.set(0.1, 0.1, 0.1);
+                            penguin.position.set(0, -0.2, 0);
+                            penguin.rotation.set(0, -Math.PI/2, 0);
+                            scene.add(penguin);
+                            }, undefined, function (error) {
+                                console.error(error);
+                            }
+                        );
+
+                        loader.load("nootnoot3d.glb", function (gltf) {
+                            text = gltf.scene;
+                            text.scale.set(0.1, 0.1, 0.1);
+                            text.position.set(0, 0.2, 0);
+                            //text.rotation.set(0, -Math.PI/2, 0);
+                            scene.add(text);
+                            }, undefined, function (error) {
+                                console.error(error);
+                            }
+                        );
+                    });
+
+                renderer = new THREE.WebGLRenderer({ antialias: true });
+                renderer.setPixelRatio(window.devicePixelRatio);
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                renderer.toneMapping = THREE.ACESFilmicToneMapping;
+                renderer.toneMappingExposure = 1;
+                renderer.outputEncoding = THREE.sRGBEncoding;
+                container.appendChild(renderer.domElement);
+
+                window.addEventListener("resize", onWindowResize);
+            }
+
+            function render() {
+                renderer.render(scene, camera);
+            }
+
+            function onWindowResize() {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                render();
+            }
+
+            init();
+            render();
+        </script>
+    <button class="center bottom" onclick="location.href = './FishingScenes/StartScene.html'">Start</button>
 </body>
 </html>

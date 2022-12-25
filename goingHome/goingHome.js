@@ -25,7 +25,7 @@ function init() {
     scene.background = textureLoader.load("../images/winterbackground.jpg");
 
     new RGBELoader()
-        .setPath("../textures/equirectangular/")
+        .setPath("./textures/equirectangular/")
         .load("snowy_forest_path_01_2k.hdr", function (texture) {
             texture.mapping = THREE.EquirectangularReflectionMapping;
 

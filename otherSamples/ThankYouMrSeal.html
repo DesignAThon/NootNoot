@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Intro scene</title>
+    <title>Thank You Mr Seal</title>
     <meta charset="utf-8" />
     <meta
       name="viewport"
@@ -12,7 +12,7 @@
 
   <body>
     <div id="info">
-      <p id="instruction1">Penguin is preparing for the winter holiday</p>
+      <p id="instruction1">Mr Seal: Thank you for the fish!</p>
       <p id="instruction2">[Press Space]</p>
     </div>
 
@@ -45,7 +45,7 @@
       let camera, scene, renderer;
 
       // Models
-      var fish, penguin, island, rod, bobber, alertModel, seal, babySeal;
+      var fish, penguin, island, fish2, alertModel, seal, babySeal;
 
       var spaceCount = 0;
 
@@ -63,7 +63,7 @@
           0.25,
           20
         );
-        camera.position.set(1, 0.3, 0);
+        camera.position.set(0.5, 0.3, -0.5);
         // rotate camera to face the penguin
         camera.lookAt(2, 2, 2);
 
@@ -113,22 +113,77 @@
             loader.load(glbPathIsland, function (gltf) {
               island = gltf.scene;
               island.scale.set(0.1, 0.1, 0.1);
-              island.position.set(1, -0.1, 0.3);
+              island.position.set(0.9, -0.1, 0.3);
               island.rotation.set(0, 90, 0);
               scene.add(island);
+            });
+
+            // Seal model
+            const glbPathSeal = "Seal.gltf";
+            loader.load(glbPathSeal, function (gltf) {
+              seal = gltf.scene;
+              seal.scale.set(0.1, 0.1, 0.1);
+              seal.position.set(-0.3, 0.08, 0.5);
+              seal.rotation.set(
+                (-10 / 180) * Math.PI,
+                (250 / 180) * Math.PI,
+                (-10 / 180) * Math.PI
+              );
+              scene.add(seal);
+            });
+
+            // baby seal model
+            const glbPathBabySeal = "Seal.gltf";
+            loader.load(glbPathBabySeal, function (gltf) {
+              babySeal = gltf.scene;
+              babySeal.scale.set(0.05, 0.05, 0.05);
+              babySeal.position.set(-0.1, 0.08, 0.5);
+              babySeal.rotation.set(
+                (-10 / 180) * Math.PI,
+                (250 / 180) * Math.PI,
+                (-10 / 180) * Math.PI
+              );
+              scene.add(babySeal);
+            });
+
+            // Fish model
+            const glbPathFish = "Fish.gltf";
+            loader.load(glbPathFish, function (gltf) {
+              fish = gltf.scene;
+
+              // Fish default position
+              fish.scale.set(0.03, 0.03, 0.03);
+              fish.position.set(-0.2, 0.03, 0.3);
+              fish.rotation.set(-((90 / 180) * Math.PI), 0, 0);
+
+              scene.add(fish);
+            });
+
+            // Second fish model
+            loader.load(glbPathFish, function (gltf) {
+              fish2 = gltf.scene;
+
+              // Fish default position
+              fish2.scale.set(0.03, 0.03, 0.03);
+              fish2.position.set(-0.22, 0.03, 0.3);
+              fish2.rotation.set(
+                (90 / 180) * Math.PI,
+                0,
+                (150 / 180) * Math.PI
+              );
+
+              scene.add(fish2);
             });
 
             // Penguin model
             const glbPath = "Penguin.gltf";
             loader.load(glbPath, function (gltf) {
-              console.log(gltf);
               penguin = gltf.scene;
               penguin.scale.set(0.06, 0.06, 0.06);
-              penguin.position.set(0.08, 0.02, 0.03);
-              penguin.rotation.set(0, (-10 / 180) * Math.PI, 0);
+              penguin.position.set(-0.2, 0.02, -0.03);
+              penguin.rotation.set(0, (270 / 180) * Math.PI, 0);
               scene.add(penguin);
             });
-
           });
 
         // renderer
@@ -149,7 +204,6 @@
         controls.update();
 
         window.addEventListener("resize", onWindowResize);
-
       }
 
       function onWindowResize() {
@@ -174,17 +228,20 @@
           spaceCount++;
 
           if (spaceCount > 1) {
-            document.getElementById("instruction1").innerHTML = "Let's go borrow a fishing rod from Mr. Seal!";
+            document.getElementById("instruction1").innerHTML =
+              "Penguin: You're welcome!";
           }
 
           if (spaceCount > 2) {
-            window.location.href = "/otherSamples/MrSealScene.html";
+            document.getElementById("instruction1").innerHTML =
+              "Time to get some firewood to cook the fish!";
           }
-        } 
+
+          if (spaceCount > 3) {
+            window.location.href = "/collectLogs/index.html";
+          }
+        }
       });
-
-
-
     </script>
   </body>
 </html>

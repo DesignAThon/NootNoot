@@ -29,7 +29,7 @@
       {
         "imports": {
           "three": "../build/three.module.js",
-          "three/addons/": "./jsm/"
+          "three/addons/": "../jsm/"
         }
       }
     </script>
@@ -105,7 +105,7 @@
             // load in models ---------------------------------------------------------------
             // model set up
             const dracoLoader = new DRACOLoader();
-            dracoLoader.setDecoderPath("/otherSamples/jsm/libs/draco/");
+            dracoLoader.setDecoderPath("../jsm/libs/draco/");
 
             const loader = new GLTFLoader().setPath("../../models/");
             loader.setDRACOLoader(dracoLoader);
@@ -220,7 +220,7 @@
           }
 
           if (spaceCount > 2) {
-            window.location.href = "/otherSamples/FishingSceneV4.html";
+            window.location.href = "/FishingScenes/FishingSceneV4.html";
           }
         }
       });

@@ -27,7 +27,7 @@
       {
         "imports": {
           "three": "../build/three.module.js",
-          "three/addons/": "./jsm/"
+          "three/addons/": "../jsm/"
         }
       }
     </script>
@@ -72,7 +72,7 @@
 
         // Load the background
         new RGBELoader()
-          .setPath("../../textures/equirectangular/")
+          .setPath("../textures/equirectangular/")
           .load("kloppenheim_06_puresky_2k.hdr", function (texture) {
             texture.mapping = THREE.EquirectangularReflectionMapping;
 
@@ -103,7 +103,7 @@
             // load in models ---------------------------------------------------------------
             // model set up
             const dracoLoader = new DRACOLoader();
-            dracoLoader.setDecoderPath("/otherSamples/jsm/libs/draco/");
+            dracoLoader.setDecoderPath("../jsm/libs/draco/");
 
             const loader = new GLTFLoader().setPath("../../models/");
             loader.setDRACOLoader(dracoLoader);
@@ -178,7 +178,7 @@
           }
 
           if (spaceCount > 2) {
-            window.location.href = "/otherSamples/MrSealScene.html";
+            window.location.href = "/FishingScenes/MrSealScene.html";
           }
         } 
       });

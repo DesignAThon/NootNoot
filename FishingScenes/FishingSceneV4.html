@@ -28,7 +28,7 @@
       {
         "imports": {
           "three": "../build/three.module.js",
-          "three/addons/": "./jsm/"
+          "three/addons/": "../jsm/"
         }
       }
     </script>
@@ -128,7 +128,7 @@
             // load in models ---------------------------------------------------------------
             // model set up
             const dracoLoader = new DRACOLoader();
-            dracoLoader.setDecoderPath("/otherSamples/jsm/libs/draco/");
+            dracoLoader.setDecoderPath("../jsm/libs/draco/");
 
             const loader = new GLTFLoader().setPath("../../models/");
             loader.setDRACOLoader(dracoLoader);
@@ -349,7 +349,7 @@
 
         if ((gameState === "won") && (keyName === "t")) {
           // go to next page
-          window.location.href = "/otherSamples/ThankYouMrSeal.html";
+          window.location.href = "/FishingScenes/ThankYouMrSeal.html";
         }
 
         // update rod position

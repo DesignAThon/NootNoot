@@ -16,7 +16,7 @@
             {
                 "imports": {
                     "three": "../build/three.module.js",
-                    "three/addons/": "../otherSamples/jsm/"
+                    "three/addons/": "../jsm/"
                 }
             }
         </script>
@@ -53,8 +53,8 @@
                 });
 
                 new RGBELoader()
-                    .setPath("../otherSamples/textures/equirectangular/")
-                    .load("royal_esplanade_1k.hdr", function (texture) {
+                    .setPath("../textures/equirectangular/")
+                    .load("snowy_forest_path_01_2k.hdr", function (texture) {
                         texture.mapping = THREE.EquirectangularReflectionMapping;
 
                         //scene.background = texture;
@@ -62,7 +62,7 @@
 
                         // model
                         const dracoLoader = new DRACOLoader();
-                        dracoLoader.setDecoderPath("../otherSamples/jsm/libs/draco/");
+                        dracoLoader.setDecoderPath("../jsm/libs/draco/");
 
                         loader = new GLTFLoader().setPath("../models/");
                         loader.setDRACOLoader(dracoLoader);

@@ -63,8 +63,7 @@
             import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
 
             var scene, camera, renderer, loader;
-            var winterscape;
-            var penguin, background, sleigh, logs = [];
+            var text, penguin;
             let count = 0;
             let initGame = false;
 
@@ -101,6 +100,17 @@
                             penguin.position.set(0, -0.2, 0);
                             penguin.rotation.set(0, -Math.PI/2, 0);
                             scene.add(penguin);
+                            }, undefined, function (error) {
+                                console.error(error);
+                            }
+                        );
+
+                        loader.load("nootnoot3d.glb", function (gltf) {
+                            text = gltf.scene;
+                            text.scale.set(0.1, 0.1, 0.1);
+                            text.position.set(0, 0.2, 0);
+                            //text.rotation.set(0, -Math.PI/2, 0);
+                            scene.add(text);
                             }, undefined, function (error) {
                                 console.error(error);
                             }

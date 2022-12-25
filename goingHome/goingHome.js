@@ -3,9 +3,9 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { RGBELoader } from "three/addons/loaders/RGBELoader.js";
 import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
 
-var scene, camera, renderer, loader;
+var scene, camera, renderer, loader, textureLoader;
 var penguin, background, sleigh, logs = [], count = 2;
-let initGame = false;
+let initGame = false, isAtHome = false;
 
 scene = new THREE.Scene();
 scene.background = new THREE.Color("black");
@@ -21,10 +21,8 @@ function init() {
     camera.position.set(0, 0, 1);
 
     //Load background texture
-    loader = new THREE.TextureLoader();
-    loader.load("../images/winterbackground.jpg", function (texture) {
-        scene.background = texture;
-    });
+    textureLoader = new THREE.TextureLoader();
+    scene.background = textureLoader.load("../images/winterbackground.jpg");
 
     new RGBELoader()
         .setPath("../otherSamples/textures/equirectangular/")
@@ -113,35 +111,38 @@ init();
 render();
 document.addEventListener("keydown", function (event) {
     const key = event.key.toLowerCase(); // "a", "1", "Shift", etc.
-
     if (!initGame) {
         initGame = true;
         document.getElementById("start").style.display = "none";
     }
-    switch (key) {
-        case "d": //forward
+
+    if(!isAtHome && key == "d") { //forward
             if (penguin.position.x + 0.2 < 0.30) { 
                 penguin.position.x += 0.03;
                 penguin.lookAt(0, 0, Math.PI);
                 sleigh.lookAt(0, 0, -Math.PI);
                 sleigh.position.x = penguin.position.x - 0.1; //move sleigh with penguin
                 if (logs.length > 0) logs.forEach(log => log.position.x = sleigh.position.x + 0.015);
+                
             }
             else { // transition because penguin is home
-                // loader.load("../images/icewall.jpg", function (texture) {
-                //     scene.background = texture;
-                // });
+                isAtHome = true;
+                scene.background = textureLoader.load("../images/icewall.jpg");
                 background.removeFromParent();
                 sleigh.removeFromParent();
                 penguin.lookAt(-Math.PI/2,0,0);
-                console.log(background)
-
-                background.isVisible = false;
+                penguin.position.set(0.00,0,0)
+                penguin.scale.set(0.1, 0.1, 0.1);
+                logs.forEach(log => log.removeFromParent());
             }
             render();
-            break;
-        default:
-            break;
     }
+
+    if(isAtHome) {
+        render();
+    }
+
     render();
 });
+
+render();

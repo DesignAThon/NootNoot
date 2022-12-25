@@ -9,3 +9,5 @@ three.js codes from the repository, having issues with the cdn version of three.
 - Background HDR 
     - https://polyhaven.com/a/winter_lake_01
     - https://polyhaven.com/a/kloppenheim_06_puresky
+- Log collection and home scene models by Francene for this hackathon
+- [ice wall background](https://www.istockphoto.com/photo/wall-made-of-ice-blocks-gm927113766-254351245)

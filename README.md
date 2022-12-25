@@ -11,4 +11,11 @@ three.js codes from the repository, having issues with the cdn version of three.
     - https://polyhaven.com/a/kloppenheim_06_puresky
 - Log collection and home scene models by Francene for this hackathon
 - [ice wall background](https://www.istockphoto.com/photo/wall-made-of-ice-blocks-gm927113766-254351245)
-- [fire gif](https://www.google.com/url?sa=i&url=https%3A%2F%2Fwifflegif.com%2Fgifs%2F126662-transparent-fire-gif&psig=AOvVaw1tMkkR7fSNFciFVDSV8deQ&ust=1672034424915000&source=images&cd=vfe&ved=0CBAQjRxqFwoTCJjz_OGLlPwCFQAAAAAdAAAAABAm)
+
+# Scene order
+- StartScene
+- MrSealScene
+- FishingScene
+- ThankYouMrSeal
+- collectLogs
+- goingHome

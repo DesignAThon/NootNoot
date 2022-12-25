@@ -107,7 +107,7 @@
             const dracoLoader = new DRACOLoader();
             dracoLoader.setDecoderPath("../jsm/libs/draco/");
 
-            const loader = new GLTFLoader().setPath("../../models/");
+            const loader = new GLTFLoader().setPath("../models/");
             loader.setDRACOLoader(dracoLoader);
 
             // FishingIsland model
@@ -220,7 +220,7 @@
           }
 
           if (spaceCount > 2) {
-            window.location.href = "/FishingScenes/FishingSceneV4.html";
+            window.location.href = "./FishingScenes/FishingSceneV4.html";
           }
         }
       });

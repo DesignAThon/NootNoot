@@ -130,7 +130,7 @@
             const dracoLoader = new DRACOLoader();
             dracoLoader.setDecoderPath("../jsm/libs/draco/");
 
-            const loader = new GLTFLoader().setPath("../../models/");
+            const loader = new GLTFLoader().setPath("../models/");
             loader.setDRACOLoader(dracoLoader);
 
             // FishingIsland model
@@ -349,7 +349,7 @@
 
         if ((gameState === "won") && (keyName === "t")) {
           // go to next page
-          window.location.href = "/FishingScenes/ThankYouMrSeal.html";
+          window.location.href = "./FishingScenes/ThankYouMrSeal.html";
         }
 
         // update rod position

@@ -28,7 +28,7 @@
     <script type="importmap">
       {
         "imports": {
-          "three": "../build/three.module.js",
+          "three": "./build/three.module.js",
           "three/addons/": "./jsm/"
         }
       }
@@ -78,7 +78,7 @@
 
         // Load the background
         new RGBELoader()
-          .setPath("../../textures/equirectangular/")
+          .setPath("./textures/equirectangular/")
           .load("snowy_forest_path_01_2k.hdr", function (texture) {
             texture.mapping = THREE.EquirectangularReflectionMapping;
 
@@ -92,7 +92,7 @@
             const dracoLoader = new DRACOLoader();
             dracoLoader.setDecoderPath("/otherSamples/jsm/libs/draco/");
 
-            const loader = new GLTFLoader().setPath("../../models/");
+            const loader = new GLTFLoader().setPath("./models/");
             loader.setDRACOLoader(dracoLoader);
 
             // Penguin model
@@ -214,7 +214,7 @@
             animationPhase++;
           }
         } catch (error) {
-          console.log(error);
+          // console.log(error);
         }
 
         if (animationPhase > 2) {

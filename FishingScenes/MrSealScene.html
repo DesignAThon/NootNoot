@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>MR Seal scene</title>
+    <title>Mr Seal scene</title>
     <meta charset="utf-8" />
     <meta
       name="viewport"
@@ -74,7 +74,7 @@
 
         // Load the background
         new RGBELoader()
-          .setPath("../../textures/equirectangular/")
+          .setPath("./../textures/equirectangular/")
           .load("kloppenheim_06_puresky_2k.hdr", function (texture) {
             texture.mapping = THREE.EquirectangularReflectionMapping;
 
@@ -107,7 +107,7 @@
             const dracoLoader = new DRACOLoader();
             dracoLoader.setDecoderPath("../jsm/libs/draco/");
 
-            const loader = new GLTFLoader().setPath("../../models/");
+            const loader = new GLTFLoader().setPath("../models/");
             loader.setDRACOLoader(dracoLoader);
 
             // FishingIsland model
@@ -220,7 +220,7 @@
           }
 
           if (spaceCount > 2) {
-            window.location.href = "/FishingScenes/FishingSceneV4.html";
+            window.location.href = "./FishingSceneV4.html";
           }
         }
       });

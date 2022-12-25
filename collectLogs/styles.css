@@ -144,3 +144,25 @@ p {
     justify-content: center;
     align-items: center;
 }
+
+#next {
+    display: none;
+    z-index: 4;
+    position: absolute;
+    background-color: rgba(0,0,0,0.5);
+    width: 100vw;
+}
+
+button {
+    background-color: #5797b1;
+    border: none;
+    border-radius: 20px;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
+    margin: 4px 2px;
+    cursor: pointer;
+}

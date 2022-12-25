@@ -165,6 +165,7 @@
                                 scene.add(logs[count]);
                                 render();
                                 count ++;
+                                document.getElementById("next").style.display = "block";
                             }, undefined, function (error) {
                                 console.error(error);
                             });
@@ -191,6 +192,10 @@
             <h1>Collect Firewood</h1>
             <p>Penguin has to collect firewood before going home. Use "a" and "d" keys to run towards the trees. Then press spacebar to cut wood. </p>
             <p>Press any key to start.</p>
+        </div>
+        <div id="next">
+            <p>Penguin has to go home before it gets dark. Let's bring him home!</p>
+            <button onclick="location.href = '../goingHome/goingHome.html'">Next</button>
         </div>
         <audio id="whack" src="../sounds/whacktree.mp3" preload></audio>
     </body>

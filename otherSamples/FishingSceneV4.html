@@ -46,7 +46,7 @@
       let camera, scene, renderer;
 
       // Models
-      var fish, penguin, island, rod, bobber, alertModel;
+      var fish, penguin, island, rod, bobber, alertModel, seal, babySeal;
 
       // Timing
       let startTime, prevTime, elapsedTime;
@@ -141,6 +141,26 @@
               island.position.set(0.35, -0.1, 0.3);
               island.rotation.set(0, 90, 0);
               scene.add(island);
+            });
+
+            // Seal model
+            const glbPathSeal = "Seal.gltf";
+            loader.load(glbPathSeal, function (gltf) {
+              seal = gltf.scene;
+              seal.scale.set(0.1, 0.1, 0.1);
+              seal.position.set(-0.6, 0.08, 0.9);
+              seal.rotation.set((-10 / 180) * Math.PI, (230/180) * Math.PI, (-10 / 180) * Math.PI);
+              scene.add(seal);
+            });
+
+            // baby seal model
+            const glbPathBabySeal = "Seal.gltf";
+            loader.load(glbPathBabySeal, function (gltf) {
+              babySeal = gltf.scene;
+              babySeal.scale.set(0.05, 0.05, 0.05);
+              babySeal.position.set(-0.4, 0.08, 0.9);
+              babySeal.rotation.set((-10 / 180) * Math.PI, (230/180) * Math.PI, (-10 / 180) * Math.PI);
+              scene.add(babySeal);
             });
 
             // Penguin model

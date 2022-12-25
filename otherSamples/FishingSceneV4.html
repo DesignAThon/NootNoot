@@ -12,9 +12,9 @@
 
   <body>
     <div id="info">
-      <p id="fishCaught">Click to Begin</p>
-      <p>Use mouse to move camera</p>
-      <p>Use WASD to move fishing rod, and space to cast or reel in</p>
+      <p id="fishCaught">Catch some fish!</p>
+      <p id="instruction1">Use the mouse to move camera</p>
+      <p id="instruction2">Use WASD to move fishing rod, and space to reel in</p>
     </div>
 
     <!-- Import maps polyfill -->
@@ -286,7 +286,7 @@
             bobber.position.x = 0.48;
           }
 
-          console.log(bobber.position.x);
+          // console.log(bobber.position.x);
         } else if (keyName === "ArrowRight" || keyName === "d") {
           // move rod left (up to 0.4 rad)
           rod.rotation.y += 0.1;
@@ -302,7 +302,7 @@
             bobber.position.z = -0.04;
           }
 
-          console.log(bobber.position.z);
+          // console.log(bobber.position.z);
         } else if (keyName === "ArrowLeft" || keyName === "a") {
           // move rod right (up to -0.4 rad)
           rod.rotation.y -= 0.1;
@@ -310,7 +310,7 @@
           if (rod.rotation.y < -0.4) {
             rod.rotation.y = -0.4;
           }
-          console.log(rod.rotation.y);
+          // console.log(rod.rotation.y);
 
           // move bobber position (up to 0.2)
           bobber.position.z += 0.01;
@@ -319,12 +319,17 @@
             bobber.position.z = 0.2;
           }
 
-          console.log(bobber.position.z);
+          // console.log(bobber.position.z);
         } else if (keyName === " ") {
           if (!(currentAnimation === "cast")) {
             resetAnimationParams();
             window.requestAnimationFrame(castAnimation);
           }
+        } 
+
+        if ((gameState === "won") && (keyName === "t")) {
+          // go to next page
+          window.location.href = "https://www.google.com";
         }
 
         // update rod position
@@ -441,6 +446,9 @@
           } else {
             document.getElementById("fishCaught").innerHTML =
               "Number of fish caught: " + targetFish + " / " + targetFish + "";
+            document.getElementById("instruction1").innerHTML = "You did it!";
+            document.getElementById("instruction2").innerHTML = "Press T to talk to the seal";
+            
             gameState = "won";
           }
         } else {
